@@ -1,5 +1,5 @@
-# bezos
-Bot for the "Bezos Giveaway" Telegram group
+# [@official_bezos_bot](https://t.me/official_bezos_bot)
+Code of the [@official_bezos_bot](https://t.me/official_bezos_bot) Telegram bot.
 # Installation and local launch
 1. Clone this repo: `git clone https://github.com/backmeupplz/bezos`
 2. Create `.env` file with environment variables listed below
