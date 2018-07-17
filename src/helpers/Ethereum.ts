@@ -16,7 +16,7 @@ export function getNewAccount() {
 /**
  * Checks balance of an advertiser
  * @param advertiser Advertiser to check balance
- * @reutrns Balance of the advertiser in ETH
+ * @returns Balance of the advertiser in ETH
  */
 export function getBalance(advertiser: Advertiser): number {
   const balance = web3.eth.getBalance(advertiser.ethAddress)
