@@ -1,6 +1,6 @@
 // Dependencies
 import { pre, prop, Typegoose } from 'typegoose'
-import { getNewAccount } from '../helpers/Ethereum'
+import { getNewAccount, getBalance } from '../helpers/Ethereum'
 
 @pre<Advertiser>('save', (next) => {
   // Add Ethereum address if doesn't exist yet
@@ -37,4 +37,53 @@ export async function getAdvertiser(chatId: number) {
     advertiser = await advertiser.save()
   }
   return advertiser
+}
+
+// Active advertisers with cache
+
+// Cache
+let activeAdvertisers: { advertiser: Advertiser, balance: number }[] = []
+
+/**
+ * Getter function for the cache
+ * @returns cached array of advertisers with their balance
+ */
+export function getActiveAdvertisers() {
+  return activeAdvertisers
+}
+
+/**
+ * Function to start refreshing active advertisers cache, called upon creation
+ */
+(function startRefreshingActiveAdvertisers() {
+  // Refresh now
+  refreshActiveAdvertisersForCache()
+  // Refresh every 5 minutes
+  setInterval(() => {
+    refreshActiveAdvertisersForCache()
+  }, 5 * 60 * 1000)
+})()
+
+/**
+ * Function to refresh active advertisers
+ */
+async function refreshActiveAdvertisersForCache() {
+  const advertisersWithAds = await AdvertiserModel.find({ ad: { $exists: true } })
+  const advertisersWithAdsAndBalance = []
+  for (const advertiser of advertisersWithAds) {
+    const balance = await getBalance(advertiser)
+    if (balance > 0.01) { // TODO: find a better way to cut down advertisers without sufficient balance
+      advertisersWithAdsAndBalance.push({ advertiser, balance })
+    }
+    await delay(1) // need this delay due to the my ether api limits
+  }
+  activeAdvertisers = advertisersWithAdsAndBalance.sort((a, b) => b.balance - a.balance)
+}
+
+/**
+ * Sleep function for the typescript
+ * @param s Number of seconds to sleep
+ */
+function delay(s: number) {
+  return new Promise(resolve => setTimeout(resolve, s * 1000))
 }
