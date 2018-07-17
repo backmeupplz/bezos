@@ -1,6 +1,6 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
-import { getActiveAdvertisers, getAdvertiser } from './models';
+import { getActiveAdvertisers, getAdvertiser, Advertiser } from './models';
 
 /**
  * Setup start and help commands at the provided bot
@@ -10,21 +10,27 @@ export function setupInfo(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('info', async (ctx) => {
     // Should only work in private
     if (ctx.chat.type === 'private') {
+      // Get chat advertiser
+      const advertiser = await getAdvertiser(ctx.chat.id)
       // Get info text
-      const infoText = await getInfoText(ctx)
+      const infoText = await getInfoText(ctx, advertiser)
       // Show info
-      ctx.replyWithHTML(infoText)
+      await ctx.replyWithHTML(infoText, { disable_web_page_preview: true })
+      // Show current ad text
+      if (advertiser.ad) {
+        ctx.replyWithHTML(advertiser.ad)
+      }
     }
   })
 }
 
 /**
  * Function that gets the info text for the chat
+ * @param ctx Context of the received command
+ * @param advertiser Advertiser that invokes the command
  * @returns info text to display to the user
  */
-async function getInfoText(ctx: ContextMessageUpdate) {
-  // Get chat advertiser
-  const advertiser = await getAdvertiser(ctx.chat.id)
+async function getInfoText(ctx: ContextMessageUpdate, advertiser: Advertiser) {
   // Get advertisers queue
   const advertisersInfo = getActiveAdvertisers()
   // Add advertisers queue

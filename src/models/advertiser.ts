@@ -13,6 +13,10 @@ export class Advertiser extends Typegoose {
   ad?: string;
   @prop({ required: true, default: false })
   adApproved: boolean;
+  @prop()
+  approveMessageChatId?: number;
+  @prop()
+  approveMessageId?: number;
 }
 
 // Get Advertiser model
