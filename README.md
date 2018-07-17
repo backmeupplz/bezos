@@ -9,6 +9,7 @@ Bot for the "Bezos Giveaway" Telegram group
 * `TOKEN` — Telegram bot token
 * `CHAT_LINK` — Link to the Telegram chat
 * `CHAT_ID` — ID of the chat
+* `MONGO` — URL of the mongo db
 # Continuous integration
 Any commit pushed to master gets deployed to [@official_bezos_bot](https://t.me/official_bezos_bot) via [CI Ninja](https://github.com/backmeupplz/ci-ninja).
 
