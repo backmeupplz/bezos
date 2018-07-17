@@ -2,8 +2,8 @@
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 
 // Setup constants
-const chatLink = 'https://t.me/joinchat/BIlEB0V-2J6tGgKkvSFzzQ'
-const chatId = -1001165940894
+const chatLink = process.env.CHAT_LINK
+const chatId = Number(process.env.CHAT_ID)
 
 // Start and help commands
 export function setupStartAndHelp(bot: Telegraf<ContextMessageUpdate>) {

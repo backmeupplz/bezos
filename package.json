@@ -27,12 +27,17 @@
   "homepage": "https://github.com/backmeupplz/bezos#readme",
   "dependencies": {
     "@types/dotenv": "^4.0.3",
+    "@types/mongoose": "^5.2.0",
     "@types/node": "^10.5.2",
+    "@types/reflect-metadata": "^0.1.0",
     "concurrently": "^3.6.0",
     "dotenv": "^6.0.0",
+    "mongoose": "^5.2.4",
     "nodemon": "^1.18.2",
+    "reflect-metadata": "^0.1.12",
     "telegraf": "^3.21.2",
     "tslint": "^5.11.0",
+    "typegoose": "^5.2.1",
     "typescript": "^2.9.2"
   }
 }
