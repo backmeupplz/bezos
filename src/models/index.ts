@@ -2,9 +2,11 @@
 import * as mongoose from 'mongoose'
 
 // Connect to mongoose
-mongoose.connect(process.env.MONGO)
+mongoose.connect(process.env.MONGO, { useNewUrlParser: true })
 
 // Get models
-import { Advertiser } from './advertiser'
+import { Advertiser, getActiveAdvertisers, getAdvertiser } from './advertiser'
 // Export models
-export { Advertiser }
+export { Advertiser,
+  getActiveAdvertisers,
+  getAdvertiser }

@@ -1,9 +1,11 @@
 // Dependencies
+import * as w3 from 'web3' // a hack due to the poor web3 typings
+const w3any: any = w3
 import Web3 from 'web3'
 import { Advertiser } from '../models'
 
 // Create web3 instance
-export const web3 = new Web3('https://api.myetherapi.com/eth')
+export const web3: Web3 = new w3any('https://api.myetherapi.com/eth')
 
 /**
  * Function to get new Ethereum wallet

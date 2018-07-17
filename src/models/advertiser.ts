@@ -2,15 +2,6 @@
 import { pre, prop, Typegoose } from 'typegoose'
 import { getNewAccount, getBalance } from '../helpers/Ethereum'
 
-@pre<Advertiser>('save', (next) => {
-  // Add Ethereum address if doesn't exist yet
-  if (!this.ethAddress || !this.ethKey) {
-    const account = getNewAccount()
-    this.ethAddress = account.address
-    this.ethKey = account.privateKey
-  }
-  next()
-})
 export class Advertiser extends Typegoose {
   @prop({ required: true, index: true, unique: true })
   chatId: number;
@@ -20,6 +11,8 @@ export class Advertiser extends Typegoose {
   ethKey: string;
   @prop()
   ad?: string;
+  @prop({ required: true, default: false })
+  adApproved: boolean;
 }
 
 // Get Advertiser model
@@ -33,7 +26,8 @@ const AdvertiserModel = new Advertiser().getModelForClass(Advertiser);
 export async function getAdvertiser(chatId: number) {
   let advertiser = await AdvertiserModel.findOne({ chatId })
   if (!advertiser) {
-    advertiser = new AdvertiserModel({ chatId })
+    const account = getNewAccount()
+    advertiser = new AdvertiserModel({ chatId, ethAddress: account.address, ethKey: account.privateKey })
     advertiser = await advertiser.save()
   }
   return advertiser
@@ -68,11 +62,11 @@ export function getActiveAdvertisers() {
  * Function to refresh active advertisers
  */
 async function refreshActiveAdvertisersForCache() {
-  const advertisersWithAds = await AdvertiserModel.find({ ad: { $exists: true } })
+  const advertisersWithAds = await AdvertiserModel.find({ ad: { $exists: true }, adApproved: true })
   const advertisersWithAdsAndBalance = []
   for (const advertiser of advertisersWithAds) {
     const balance = await getBalance(advertiser)
-    if (balance > 0.01) { // TODO: find a better way to cut down advertisers without sufficient balance
+    if (balance > Number(process.env.MIN_ETH)) { // TODO: find a better way to cut down advertisers without sufficient balance
       advertisersWithAdsAndBalance.push({ advertiser, balance })
     }
     await delay(1) // need this delay due to the my ether api limits

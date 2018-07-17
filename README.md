@@ -10,6 +10,7 @@ Code of the [@official_bezos_bot](https://t.me/official_bezos_bot) Telegram bot.
 * `CHAT_LINK` — Link to the Telegram chat
 * `CHAT_ID` — ID of the chat
 * `MONGO` — URL of the mongo db
+* `MIN_ETH` — Minimum amount on advertiser ETH address to add them to the advertiser queue
 # Continuous integration
 Any commit pushed to master gets deployed to [@official_bezos_bot](https://t.me/official_bezos_bot) via [CI Ninja](https://github.com/backmeupplz/ci-ninja).
 
