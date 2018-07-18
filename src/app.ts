@@ -7,6 +7,7 @@ const telegraf = require('telegraf')
 import { setupStartAndHelp } from './startAndHelp'
 import { setupAd } from './ad'
 import { setupInfo } from './info'
+import { setupApproveCallback } from './approval';
 
 // Setup the bot
 const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: 'official_bezos_bot' })
@@ -18,7 +19,10 @@ setupStartAndHelp(bot)
 setupAd(bot)
 // Info command
 setupInfo(bot)
+// Setup approval callback
+setupApproveCallback(bot)
 
+// DEBUG: logging the rest of messages
 bot.on('message', (ctx) => {
   console.log(ctx.message)
 })

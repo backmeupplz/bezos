@@ -22,6 +22,6 @@ export function getNewAccount() {
  */
 export async function getBalance(advertiser: Advertiser): Promise<number> {
   const balance = await web3.eth.getBalance(advertiser.ethAddress)
-  const ether = web3.utils.fromWei(balance, 'ether')
-  return ether.toNumber()
+  const ether = web3.utils.fromWei(balance || 0, 'ether')
+  return ether
 }
