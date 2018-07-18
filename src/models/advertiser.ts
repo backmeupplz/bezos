@@ -1,26 +1,27 @@
 // Dependencies
-import { pre, prop, Typegoose } from 'typegoose'
+import { prop, Typegoose } from 'typegoose'
 import { getNewAccount, getBalance } from '../helpers/Ethereum'
 
+// Advertiser class definition
 export class Advertiser extends Typegoose {
   @prop({ required: true, index: true, unique: true })
-  chatId: number;
+  chatId: number
   @prop({ required: true })
-  ethAddress: string;
+  ethAddress: string
   @prop({ required: true })
-  ethKey: string;
+  ethKey: string
   @prop()
-  ad?: string;
+  ad?: string
   @prop({ required: true, default: false })
-  adApproved: boolean;
+  adApproved: boolean
   @prop()
-  approveMessageChatId?: number;
+  approveMessageChatId?: number
   @prop()
-  approveMessageId?: number;
+  approveMessageId?: number
 }
 
 // Get Advertiser model
-const AdvertiserModel = new Advertiser().getModelForClass(Advertiser);
+const AdvertiserModel = new Advertiser().getModelForClass(Advertiser)
 
 /**
  * Getting or creating advertiser

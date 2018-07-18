@@ -1,7 +1,7 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
-import { getAdvertiser } from './models';
-import { sendForApproval } from './approval';
+import { getAdvertiser } from '../models'
+import { sendForApproval } from '../helpers/approval'
 
 // Start and help commands
 export function setupAd(bot: Telegraf<ContextMessageUpdate>) {

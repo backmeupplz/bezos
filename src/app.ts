@@ -4,15 +4,18 @@ dotenv.config({ path: `${__dirname}/../.env` })
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 const telegraf = require('telegraf')
-import { setupStartAndHelp } from './startAndHelp'
-import { setupAd } from './ad'
-import { setupInfo } from './info'
-import { setupApproveCallback } from './approval';
+import { setupStartAndHelp } from './commands/startAndHelp'
+import { setupAd } from './commands/ad'
+import { setupInfo } from './commands/info'
+import { setupApproveCallback } from './helpers/approval'
+import { setupTracker } from './helpers/activityTracker'
 
 // Setup the bot
 const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: 'official_bezos_bot' })
 bot.startPolling()
 
+// Track activity
+setupTracker(bot)
 // Start and help commands
 setupStartAndHelp(bot)
 // Ad command
@@ -21,8 +24,3 @@ setupAd(bot)
 setupInfo(bot)
 // Setup approval callback
 setupApproveCallback(bot)
-
-// DEBUG: logging the rest of messages
-bot.on('message', (ctx) => {
-  console.log(ctx.message)
-})

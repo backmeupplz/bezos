@@ -1,5 +1,5 @@
 // Dependencies
-import { getAdvertiser } from './models'
+import { getAdvertiser } from '../models'
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 
 /**

@@ -1,6 +1,6 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
-import { getActiveAdvertisers, getAdvertiser, Advertiser } from './models';
+import { getActiveAdvertisers, getAdvertiser, Advertiser } from '../models'
 
 /**
  * Setup start and help commands at the provided bot
@@ -75,6 +75,8 @@ async function getInfoText(ctx: ContextMessageUpdate, advertiser: Advertiser) {
   // Add current text
   if (advertiser.ad) {
     result = `${result}\n\n<b>Текущий рекламный текст:</b>` // TODO: add current ad text
+  } else {
+    result = `${result}\n\n<b>Нет текущего рекламного текста</b> (можете добавить при помощи команды /ad)`
   }
 
   result = `${result}\n\n`
