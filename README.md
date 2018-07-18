@@ -12,8 +12,12 @@ Code of the [@official_bezos_bot](https://t.me/official_bezos_bot) Telegram bot.
 * `MONGO` — URL of the mongo db
 * `MIN_ETH` — Minimum amount on advertiser ETH address to add them to the advertiser queue
 * `ADMIN_CHAT_ID` — Chat that shall receive the approval requests
+* `CHANNEL_ID` — Channel that members should subscribe to to participate in the giveaway
+# Requirements
+* Bot should be admin at `CHAT_ID`
+* Bot should be able to send messages to `ADMIN_CHAT_ID`
+* Bot should be admin at `CHANNEL_ID`
 # Continuous integration
 Any commit pushed to master gets deployed to [@official_bezos_bot](https://t.me/official_bezos_bot) via [CI Ninja](https://github.com/backmeupplz/ci-ninja).
-
 # License
 MIT — use for any purpose. Would be great if you could leave a note about the original developers. Thanks!

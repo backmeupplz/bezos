@@ -27,6 +27,13 @@ export async function recordMemberActivity(user: User) {
 }
 
 /**
+ * Function to get active members
+ */
+export async function getActiveMembers() {
+  return await MemberModel.find({ active: true })
+}
+
+/**
  * Getting or creating a member
  * @param chatId Chat id of the member to find or create
  * @returns member

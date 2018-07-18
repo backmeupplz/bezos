@@ -9,6 +9,7 @@ import { setupAd } from './commands/ad'
 import { setupInfo } from './commands/info'
 import { setupApproveCallback } from './helpers/approval'
 import { setupTracker } from './helpers/activityTracker'
+import { scheduleGiveaway } from './helpers/scheduler'
 
 // Setup the bot
 const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: 'official_bezos_bot' })
@@ -24,3 +25,6 @@ setupAd(bot)
 setupInfo(bot)
 // Setup approval callback
 setupApproveCallback(bot)
+
+// Schedule giveaway job
+scheduleGiveaway()
