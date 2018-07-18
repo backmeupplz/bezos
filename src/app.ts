@@ -27,4 +27,4 @@ setupInfo(bot)
 setupApproveCallback(bot)
 
 // Schedule giveaway job
-scheduleGiveaway()
+scheduleGiveaway(bot)
