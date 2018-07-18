@@ -50,11 +50,10 @@ export function setupApproveCallback(bot: Telegraf<ContextMessageUpdate>) {
     const advertiser = await getAdvertiser(chatId)
     // Edit message to reflect
     const message = ctx.callbackQuery.message
-    const chat = message.chat
-    bot.telegram.editMessageText(chat.id,
+    bot.telegram.editMessageText(message.chat.id,
       message.message_id,
       undefined,
-      `${approved ? '👍' : '👎'} <a href="tg://user?id=${chat.id}">${chat.username ? `@${chat.username}, ` : ''}${chat.first_name || 'no_first_name'} ${chat.last_name || 'no_last_name'}</a>\n\n${advertiser.ad}`,
+      `${approved ? '👍' : '👎'} <a href="tg://user?id=${chatId}">${message.text.split('\n')[0]}</a>\n\n${advertiser.ad}`,
       { parse_mode: 'HTML'})
     if (approved) {
       // Approved
