@@ -1,9 +1,10 @@
 // Dependencies
-import { getActiveMembers, Member } from "../models/member"
+import { getActiveMembers, Member } from '../models/member'
 import { shuffle, random } from 'lodash'
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { getActiveAdvertisers } from '../models'
 import { ChatMember } from 'telegram-typings'
+import { getRefsMap } from './referral'
 
 /**
  * Function that starts giveaway
@@ -24,10 +25,27 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
   const advertiser = activeAdvertisers[0]
   // Get shuffled list of the active members
   let activeMembers = await getActiveMembers()
+  // Save number of participants
+  const numberOfParticipants = activeMembers.length
+  // Add chances for referrals
+  const resultingMembers: any = []
+  const refMap = getRefsMap()
+  for (const member of activeMembers) {
+    if (refMap[member.chatId]) {
+      for (let i = 0; i < refMap[member.chatId] + 1; i++) {
+        resultingMembers.push(member)
+      }
+    } else {
+      resultingMembers.push(member)
+    }
+  }
+  activeMembers = resultingMembers
+  // Shuffle the members array
   activeMembers = shuffle(activeMembers)
   // Get winner
   let winner: Member
-  let winnerInfo: ChatMember
+  let winnerInfoChannel: ChatMember
+  let winnerInfoChat: ChatMember
   while (!winner) {
     // Get random number
     const winnerIndex = random(activeMembers.length-1)
@@ -36,9 +54,11 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
     // Check if they are valid
     try {
       // Check if subscribed to the channel
-      winnerInfo = await bot.telegram.getChatMember(Number(process.env.CHANNEL_ID), candidate.chatId)
+      winnerInfoChannel = await bot.telegram.getChatMember(Number(process.env.CHANNEL_ID), candidate.chatId)
+      if (winnerInfoChannel.status !== 'member') continue
       // Check if still in the chat
-      await bot.telegram.getChatMember(Number(process.env.CHAT_ID), candidate.chatId)
+      winnerInfoChat = await bot.telegram.getChatMember(Number(process.env.CHAT_ID), candidate.chatId)
+      if (winnerInfoChat.status !== 'member') continue
       // Assign winner
       winner = candidate
     } catch (err) {
@@ -47,11 +67,11 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
   }
   // Congratulate winner and give them instructions
   // Had to cast an any type here due to the incomplete Telegraf typings
-  const user = winnerInfo.user
+  const user = winnerInfoChannel.user
   const name = user.username ?
-    `<a href="tg://user?id=${user.id}">${user.username}</a>` :
+    `<a href="tg://user?id=${user.id}">@${user.username}</a>` :
     `<a href="tg://user?id=${user.id}">${user.first_name}${user.last_name ? ` ${user.last_name}` : ''}</a>`
-  const text = `${name}, поздравляем! Вы выиграли сегодняшний приз! К сожалению, процесс розыгрыша еще не реализован, поэтому ваш выигрыш в этот раз чисто символичен. Процесс розыгрыша реального Ethereum будет реализован в ближайшее время. Спасибо!`
+  const text = `${name}, поздравляем! Вы выиграли сегодняшний приз! К сожалению, процесс розыгрыша еще не реализован, поэтому ваш выигрыш в этот раз чисто символичен. Процесс розыгрыша реального Ethereum будет реализован в ближайшее время. Всего было вот столько участников: ${numberOfParticipants}. Спасибо!`
   await (<any>bot.telegram).sendMessage(Number(process.env.CHAT_ID), text, {
     parse_mode: 'HTML'
   })

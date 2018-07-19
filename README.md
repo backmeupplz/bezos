@@ -17,6 +17,8 @@ Code of the [@official_bezos_bot](https://t.me/official_bezos_bot) Telegram bot.
 * Bot should be admin at `CHAT_ID`
 * Bot should be able to send messages to `ADMIN_CHAT_ID`
 * Bot should be admin at `CHANNEL_ID`
+# Admin commands
+* `/giveaway` — should be sent from `ADMIN_CHAT_ID`, triggers giveaway
 # Continuous integration
 Any commit pushed to master gets deployed to [@official_bezos_bot](https://t.me/official_bezos_bot) via [CI Ninja](https://github.com/backmeupplz/ci-ninja).
 # License
