@@ -16,7 +16,7 @@ export function setupTracker(bot: Telegraf<ContextMessageUpdate>) {
 
 /**
  * Check if the activity is valid and record it to the member
- * @param ctx 
+ * @param ctx Context of the message
  */
 function checkActivity(ctx: ContextMessageUpdate) {
   // Get message

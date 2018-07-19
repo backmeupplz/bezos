@@ -6,6 +6,7 @@ Code of the [@official_bezos_bot](https://t.me/official_bezos_bot) Telegram bot.
 3. Run `yarn install` in the root folder
 4. Run `yarn distribute`
 # Environment variables in `.env` file
+* `USERNAME` — Telegram bot username
 * `TOKEN` — Telegram bot token
 * `CHAT_LINK` — Link to the Telegram chat
 * `CHAT_ID` — ID of the chat

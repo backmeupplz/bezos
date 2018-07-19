@@ -11,13 +11,16 @@ import { setupApproveCallback } from './helpers/approval'
 import { setupTracker } from './helpers/activityTracker'
 import { scheduleGiveaway } from './helpers/scheduler'
 import { setupGiveaway } from './commands/giveaway'
+import { setupPayout } from './helpers/payout'
 
 // Setup the bot
-const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: 'official_bezos_bot' })
+const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: process.env.USERNAME })
 bot.startPolling()
 
 // Track activity
 setupTracker(bot)
+// Setup payout
+setupPayout(bot)
 // Start and help commands
 setupStartAndHelp(bot)
 // Ad command
