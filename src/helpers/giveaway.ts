@@ -87,18 +87,23 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
     Number(process.env.AD_CHANNEL_ID),
     adMessage.message_id)
   // Pin message
-  await bot.telegram.pinChatMessage(adForward.chat.id, adForward.message_id, {
-    disable_notification: true // TODO: remove
-  })
+  await bot.telegram.pinChatMessage(adForward.chat.id, adForward.message_id)
   // Check if winner has ethereum wallet
   if (!winner.ethWinAddress || !winner.ethWinKey) {
     const account = getNewAccount()
     winner.ethWinAddress = account.address
     winner.ethWinKey = account.privateKey
-    winner = (<any>winner).save()
+    winner = await (<any>winner).save()
   }
-  // Transfer advertiser balance to user
-  await transfer(advertiser.advertiser.ethAddress, advertiser.advertiser.ethKey, winner.ethWinAddress)
-  // Make all users inactive
-  await resetActivity()
+  try {
+    // Transfer advertiser balance to user
+    await transfer(advertiser.advertiser.ethAddress, advertiser.advertiser.ethKey, winner.ethWinAddress)
+    // Make all users inactive
+    await resetActivity()
+  } catch(err) {
+    const errorText = `Что-то пошло не так с транзакцией Ethereum на кошелек пользователя, @borodutch разберется:\n\n<code>${err.message}</code>`
+    await (<any>bot.telegram).sendMessage(Number(process.env.CHAT_ID), errorText, {
+      parse_mode: 'HTML'
+    })
+  }
 }

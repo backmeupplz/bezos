@@ -2,7 +2,9 @@
 import * as w3 from 'web3' // a hack due to the poor web3 typings
 const w3any: any = w3
 import Web3 from 'web3'
+const Tx = require('ethereumjs-tx')
 import { Advertiser, Member } from '../models'
+import axios from 'axios'
 
 // Create web3 instance
 export const web3: Web3 = new w3any('https://api.myetherapi.com/eth')
@@ -42,8 +44,51 @@ export async function getMemberBalance(member: Member): Promise<number> {
  * @param fromAddress Address of the sender
  * @param fromKey Private key of the sender
  * @param toAddress Address of the receiver
+ * @returns transaction hash
  */
 export async function transfer(fromAddress: string, fromKey: string, toAddress: string){
-  // TODO: implement
-  console.log(`Transferring ETH from ${fromAddress} to ${toAddress}`)
+  // Get balance
+  const balance = await web3.eth.getBalance(fromAddress)
+  // Get nonce
+  const txCount = await web3.eth.getTransactionCount(fromAddress)
+  // Get gas price
+  const prices = await getCurrentGasPrices()
+  const gasPrice = prices.high * 1000000000 // Convert to wei
+  const gasLimit = 25000
+  // Construct the transaction
+  const details = {
+    nonce: web3.utils.toHex(txCount),
+    value: web3.utils.toHex(balance - (gasLimit * gasPrice)),
+    gas: web3.utils.toHex(gasLimit),
+    gasPrice: web3.utils.toHex(gasPrice),
+    to: toAddress,
+    from: fromAddress,
+  }
+  const tx = new Tx(details)
+  // Get private key
+  const privateKey = new Buffer(fromKey.substring(2), 'hex')
+  // Sign transaction
+  tx.sign(privateKey)
+  // Serialize tx
+  const serializedTx = '0x' + tx.serialize().toString('hex')
+  return new Promise((res, rej) => {
+    // Send tx
+    web3.eth.sendSignedTransaction(serializedTx, (err, hash) => {
+      if (err) rej(err)
+      res(hash)
+    })
+  })
+}
+
+/**
+ * Getting the current gas prices
+ * @returns object with gas prices
+ */
+async function getCurrentGasPrices() {
+  let response = await axios.get('https://ethgasstation.info/json/ethgasAPI.json')
+  return {
+    low: response.data.safeLow / 10,
+    medium: response.data.average / 10,
+    high: response.data.fast / 10
+  }
 }

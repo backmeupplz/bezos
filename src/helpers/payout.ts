@@ -34,10 +34,12 @@ async function checkPayout(ctx: ContextMessageUpdate) {
   const balance = await getWinBalance(message.from.id)
   if (balance <= 0) return
   // Transfer balance
-  const member = await getMember(message.from.id)
-  // TODO: add try/catch
-  const tx = await transfer(member.ethWinAddress, member.ethWinKey, message.text)
-  // Notify user
-  // TODO: add tx number
-  ctx.reply(`${balance} ETH было переведено на <a href="https://etherscan.io/address/${message.text}">${message.text}</a>. Спасибо за участие!`)
+  try {
+    const member = await getMember(message.from.id)
+    const tx = await transfer(member.ethWinAddress, member.ethWinKey, message.text)
+    // Notify user
+    ctx.replyWithHTML(`${balance} ETH было переведено на <a href="https://etherscan.io/address/${message.text}">${message.text}</a> транзакцией <a href="https://etherscan.io/tx/${tx}">${tx}</a>. Спасибо за участие!`)
+  } catch (err) {
+    ctx.replyWithHTML(`К сожалению, возникла ошибка перевода:\n\n<code>${err.message}</code>`)
+  }
 }
