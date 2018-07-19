@@ -1,7 +1,7 @@
 // Dependencies
 import { prop, Typegoose } from 'typegoose'
 import { User } from 'telegram-typings'
-import { getMemberBalance } from '../helpers/ethereum'
+import { getMemberBalance } from '../helpers/Ethereum'
 
 // Member class definition
 export class Member extends Typegoose {
