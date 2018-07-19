@@ -8,7 +8,7 @@ import { Telegraf, ContextMessageUpdate } from 'telegraf'
  * @param bot Bot that will pin the ad
  */
 export function scheduleGiveaway(bot: Telegraf<ContextMessageUpdate>) {
-  scheduleJob('0 0 7 * * ? *', () => {
+  scheduleJob('0 0 7 * * * *', () => {
     giveaway(bot)
   })
 }
