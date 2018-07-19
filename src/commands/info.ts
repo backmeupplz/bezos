@@ -74,7 +74,7 @@ async function getInfoText(ctx: ContextMessageUpdate, advertiser: Advertiser) {
   result = `${result}\n<b>Ваш текущий баланс:</b>\n${position < 0 ? `Показывается, только если у вас больше ${process.env.MIN_ETH}` : advertisersInfo[position].balance} ETH.`
   // Add current text
   if (advertiser.ad) {
-    result = `${result}\n\n<b>Текущий рекламный текст:</b>` // TODO: add current ad text
+    result = `${result}\n\n<b>Текущий рекламный текст:</b>`
   } else {
     result = `${result}\n\n<b>Нет текущего рекламного текста</b> (можете добавить при помощи команды /ad)`
   }

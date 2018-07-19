@@ -1,6 +1,7 @@
 // Dependencies
 import { prop, Typegoose } from 'typegoose'
 import { User } from 'telegram-typings'
+import { getMemberBalance } from '../helpers/ethereum'
 
 // Member class definition
 export class Member extends Typegoose {
@@ -10,6 +11,10 @@ export class Member extends Typegoose {
   active: boolean
   @prop({ index: true })
   ref?: number
+  @prop()
+  ethWinAddress?: string
+  @prop()
+  ethWinKey?: string
 }
 
 // Get Member model
@@ -42,6 +47,30 @@ export async function getActiveMembers() {
  */
 export async function getMember(chatId: number) {
   return await MemberModel.findOne({ chatId })
+}
+
+/**
+ * Getting win balance for a member
+ * @param chatId Chat id of the member
+ * @returns actual win balance, 0 if no member, 0 if no win
+ */
+export async function getWinBalance(chatId: number) {
+  // Get member
+  const member = await getMember(chatId)
+  // If no member exists, there is obviously no win balance
+  if (!member) return 0
+  // If member doesn't have eth win wallet, there is no win balance
+  if (!member.ethWinAddress) return 0
+  // Return balance
+  return await getMemberBalance(member)
+}
+
+/**
+ * Function that sets everybody's activity to false
+ */
+export async function resetActivity() {
+  // TODO: implement
+  console.log('Setting everybody\'s activity to false')
 }
 
 /**

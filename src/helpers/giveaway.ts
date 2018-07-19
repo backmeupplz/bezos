@@ -1,10 +1,11 @@
 // Dependencies
-import { getActiveMembers, Member } from '../models/member'
+import { getActiveMembers, Member, resetActivity } from '../models/member'
 import { shuffle, random } from 'lodash'
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { getActiveAdvertisers } from '../models'
 import { ChatMember, Message } from 'telegram-typings'
 import { getRefsMap } from './referral'
+import { transfer, getNewAccount } from './Ethereum'
 
 /**
  * Function that starts giveaway
@@ -71,7 +72,7 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
   const name = user.username ?
     `<a href="tg://user?id=${user.id}">@${user.username}</a>` :
     `<a href="tg://user?id=${user.id}">${user.first_name}${user.last_name ? ` ${user.last_name}` : ''}</a>`
-  const text = `${name}, поздравляем! Вы выиграли сегодняшний приз! К сожалению, процесс розыгрыша еще не реализован, поэтому ваш выигрыш в этот раз чисто символичен. Процесс розыгрыша реального Ethereum будет реализован в ближайшее время. Всего было вот столько участников: ${numberOfParticipants}. Спасибо!`
+  const text = `${name}, поздравляем! Вы выиграли сегодняшний приз в ${advertiser.balance} ETH! Всего было вот столько участников: ${numberOfParticipants}. Подождите 5-30 минут, пока транзакция придет к вам на счет, проверьте, что у вас есть выигрышный баланс при помощи команды /help, а после ответьте на любое мое сообщение адресом любого Ethereum кошелька — я сразу же переведу туда ваш выигрыш. Спасибо!`
   await (<any>bot.telegram).sendMessage(Number(process.env.CHAT_ID), text, {
     parse_mode: 'HTML'
   })
@@ -89,12 +90,15 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
   await bot.telegram.pinChatMessage(adForward.chat.id, adForward.message_id, {
     disable_notification: true // TODO: remove
   })
-
-  /**
-   * TODO:
-   * — Transfer advertiser's balance to secure wallet
-   * — Add this wallet to the user object in db
-   * — Give user instructions how to get the prize
-   * — Set active flag for all users to false
-   */
+  // Check if winner has ethereum wallet
+  if (!winner.ethWinAddress || !winner.ethWinKey) {
+    const account = getNewAccount()
+    winner.ethWinAddress = account.address
+    winner.ethWinKey = account.privateKey
+    winner = (<any>winner).save()
+  }
+  // Transfer advertiser balance to user
+  await transfer(advertiser.advertiser.ethAddress, advertiser.advertiser.ethKey, winner.ethWinAddress)
+  // Make all users inactive
+  await resetActivity()
 }
