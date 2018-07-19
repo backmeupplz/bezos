@@ -13,10 +13,10 @@ Code of the [@official_bezos_bot](https://t.me/official_bezos_bot) Telegram bot.
 * `MIN_ETH` — Minimum amount on advertiser ETH address to add them to the advertiser queue
 * `ADMIN_CHAT_ID` — Chat that shall receive the approval requests
 * `CHANNEL_ID` — Channel that members should subscribe to to participate in the giveaway
+* `AD_CHANNEL_ID` — Channel that bot will post ads to, then forwarding and pinning it in the `CHAT_ID`
 # Requirements
-* Bot should be admin at `CHAT_ID`
+* Bot should be admin at `CHAT_ID`, `CHANNEL_ID` and `AD_CHANNEL_ID`
 * Bot should be able to send messages to `ADMIN_CHAT_ID`
-* Bot should be admin at `CHANNEL_ID`
 # Admin commands
 * `/giveaway` — should be sent from `ADMIN_CHAT_ID`, triggers giveaway
 # Continuous integration

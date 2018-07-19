@@ -3,7 +3,7 @@ import { getActiveMembers, Member } from '../models/member'
 import { shuffle, random } from 'lodash'
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { getActiveAdvertisers } from '../models'
-import { ChatMember } from 'telegram-typings'
+import { ChatMember, Message } from 'telegram-typings'
 import { getRefsMap } from './referral'
 
 /**
@@ -75,10 +75,23 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
   await (<any>bot.telegram).sendMessage(Number(process.env.CHAT_ID), text, {
     parse_mode: 'HTML'
   })
+  // Get ad
+  const ad = `#Реклама\n\n${advertiser.advertiser.ad}\n\n——————————\n<a href="http://telegra.ph/Pravila-i-usloviya-uchastiya-v-Razdache-Bezosa-07-18">Правила группы и условия участия в Раздаче Безоса</a> — обязательны к прочтению. За флуд, спам, флейм пермабан. Модераторам выдали банхаммеры. Хотите увидеть здесь свою рекламу? Пишите в личку боту @official_bezos_bot.`
+  // Post ad to the ad channel
+  const adMessage: Message = await (<any>bot.telegram).sendMessage(Number(process.env.AD_CHANNEL_ID), ad, {
+    parse_mode: 'HTML'
+  })
+  // Forward message to the chat
+  const adForward: Message = await (<any>bot.telegram).forwardMessage(Number(process.env.CHAT_ID),
+    Number(process.env.AD_CHANNEL_ID),
+    adMessage.message_id)
+  // Pin message
+  await bot.telegram.pinChatMessage(adForward.chat.id, adForward.message_id, {
+    disable_notification: true // TODO: remove
+  })
 
   /**
    * TODO:
-   * — Pin advertiser's message
    * — Transfer advertiser's balance to secure wallet
    * — Add this wallet to the user object in db
    * — Give user instructions how to get the prize
