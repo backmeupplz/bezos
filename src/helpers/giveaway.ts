@@ -55,10 +55,10 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
     try {
       // Check if subscribed to the channel
       winnerInfoChannel = await bot.telegram.getChatMember(Number(process.env.CHANNEL_ID), candidate.chatId)
-      if (winnerInfoChannel.status !== 'member') continue
+      if (winnerInfoChannel.status !== 'member' && winnerInfoChannel.status !== 'administrator') continue
       // Check if still in the chat
       winnerInfoChat = await bot.telegram.getChatMember(Number(process.env.CHAT_ID), candidate.chatId)
-      if (winnerInfoChat.status !== 'member') continue
+      if (winnerInfoChat.status !== 'member' && winnerInfoChannel.status !== 'administrator') continue
       // Assign winner
       winner = candidate
     } catch (err) {
