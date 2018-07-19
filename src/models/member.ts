@@ -69,8 +69,12 @@ export async function getWinBalance(chatId: number) {
  * Function that sets everybody's activity to false
  */
 export async function resetActivity() {
-  // TODO: implement
-  console.log('Setting everybody\'s activity to false')
+  return new Promise((res, rej) => {
+    MemberModel.updateMany({}, { active: false }, (err) => {
+      if (err) return rej(err)
+      res()
+    })
+  })
 }
 
 /**
