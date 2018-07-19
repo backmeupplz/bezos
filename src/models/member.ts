@@ -8,6 +8,8 @@ export class Member extends Typegoose {
   chatId: number
   @prop({ required: true, index: true, default: false })
   active: boolean
+  @prop({ index: true })
+  ref?: number
 }
 
 // Get Member model
@@ -19,7 +21,7 @@ const MemberModel = new Member().getModelForClass(Member)
  */
 export async function recordMemberActivity(user: User) {
   // Get member
-  const member = await getMember(user.id)
+  const member = await getOrCreateMember(user.id)
   // Set active status
   member.active = true
   // Save member
@@ -34,11 +36,20 @@ export async function getActiveMembers() {
 }
 
 /**
+ * Function to get member (or undefined if they don't exist)
+ * @param chatId Chat id of the member to get
+ * @returns member object or undefined"
+ */
+export async function getMember(chatId: number) {
+  return await MemberModel.findOne({ chatId })
+}
+
+/**
  * Getting or creating a member
  * @param chatId Chat id of the member to find or create
  * @returns member
  */
-async function getMember(chatId: number) {
+async function getOrCreateMember(chatId: number) {
   let member = await MemberModel.findOne({ chatId })
   if (!member) {
     member = new MemberModel({ chatId })

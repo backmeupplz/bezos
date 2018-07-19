@@ -71,7 +71,7 @@ async function refreshActiveAdvertisersForCache() {
   const advertisersWithAdsAndBalance = []
   for (const advertiser of advertisersWithAds) {
     const balance = await getBalance(advertiser)
-    if (balance > Number(process.env.MIN_ETH)) { // TODO: find a better way to cut down advertisers without sufficient balance
+    if (balance >= Number(process.env.MIN_ETH)) { // TODO: find a better way to cut down advertisers without sufficient balance
       advertisersWithAdsAndBalance.push({ advertiser, balance })
     }
     await delay(1) // need this delay due to the my ether api limits
