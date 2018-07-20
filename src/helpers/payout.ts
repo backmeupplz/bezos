@@ -32,7 +32,7 @@ async function checkPayout(ctx: ContextMessageUpdate) {
   if (!ethereumRegex({ exact: true }).test(message.text)) return
   // If not enough balance, then stop
   const balance = await getWinBalance(message.from.id)
-  if (balance <= 0) return
+  if (balance <= 0.005) return
   // Transfer balance
   try {
     const member = await getMember(message.from.id)
