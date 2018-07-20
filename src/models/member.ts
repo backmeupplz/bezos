@@ -35,9 +35,18 @@ export async function recordMemberActivity(user: User) {
 
 /**
  * Function to get active members
+ * @returns active members
  */
 export async function getActiveMembers() {
   return await MemberModel.find({ active: true })
+}
+
+/**
+ * Function to get active members count
+ * @returns active members count
+ */
+export async function getActiveMembersCount() {
+  return await MemberModel.count({ active: true })
 }
 
 /**
