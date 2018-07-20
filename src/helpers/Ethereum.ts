@@ -35,7 +35,8 @@ export async function getBalance(advertiser: Advertiser): Promise<number> {
  */
 export async function getMemberBalance(member: Member): Promise<number> {
   const balance = await web3.eth.getBalance(member.ethWinAddress)
-  const ether = web3.utils.fromWei(balance < 0.005 ? 0 : balance, 'ether')
+  let ether = web3.utils.fromWei(balance, 'ether')
+  if (ether < 0.005) ether = 0
   return ether
 }
 

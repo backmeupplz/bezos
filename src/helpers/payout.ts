@@ -1,7 +1,7 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { getWinBalance, getMember } from '../models/member';
-import { transfer, getMemberBalance } from './Ethereum';
+import { transfer } from './Ethereum';
 const ethereumRegex = require('ethereum-regex')
 
 /**
