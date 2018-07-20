@@ -69,7 +69,7 @@ async function getInfoText(ctx: ContextMessageUpdate, advertiser: Advertiser) {
     }
   }
   // Add ethereum address
-  result = `${result}\n\n<b>Ваш адрес для <a href="https://etherscan.io/address/${advertiser.ethAddress}">пополнения ETH:</a></b>:\n<code>${advertiser.ethAddress}</code>`
+  result = `${result}\n\n<b>Ваш адрес для</b> <a href="https://etherscan.io/address/${advertiser.ethAddress}">пополнения ETH:</a>:\n<code>${advertiser.ethAddress}</code>`
   // Add current ethereum balance
   result = `${result}\n<b>Ваш текущий баланс:</b>\n${position < 0 ? `Показывается, только если у вас больше ${process.env.MIN_ETH}` : advertisersInfo[position].balance} ETH.`
   // Add current text
