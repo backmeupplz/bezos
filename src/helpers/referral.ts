@@ -60,7 +60,7 @@ async function refreshRefMap() {
   for (const member of activeMembers) {
     if (member.ref) {
       if (result[member.ref]) {
-        result[member.ref]++
+        result[member.ref] = result[member.ref] + 1
       } else {
         result[member.ref] = 1
       }
