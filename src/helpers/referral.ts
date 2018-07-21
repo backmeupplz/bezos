@@ -32,7 +32,7 @@ async function setupReferral(chatId: number, refId: number) {
   if (!receiver) throw new Error(`Пользователь, которому вы хотите подарить свою рефералку, еще не отметился в чате "<a href="${process.env.CHAT_LINK}">Раздача Безоса</a>" — попросите его написать туда что-нибудь и попробуйте еще раз, пожалуйста`)
   if (chatId === refId) throw new Error(`Ай-я-яй, сегодня сам себе рефералом становишься, а завтра Родину продашь!`)
   // Setup the link
-  sender.ref = chatId
+  sender.ref = refId
   // Save sender
   await sender.save()
 }
