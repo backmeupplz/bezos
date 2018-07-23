@@ -21,9 +21,15 @@ export function setupRefList(bot: Telegraf<ContextMessageUpdate>) {
     list = list.sort((a, b) => b.refCount - a.refCount)
     // Get list message
     let result = '<b>Лидерборд участников по количеству активных рефов:</b>'
-    list.forEach((member, index) => {
-      result = `${result}\n${index + 1}. <a href="tg://user?id=${member.chatId}">${member.refCount}</a>`
-    })
+    let prevRefCount = 0
+    for (const member of list) {
+      if (prevRefCount === member.refCount) {
+        result = `${result},  <a href="tg://user?id=${member.chatId}">${member.chatId}</a>`
+      } else {
+        prevRefCount = member.refCount
+        result = `${result}\n${member.refCount}. <a href="tg://user?id=${member.chatId}">${member.chatId}</a>`
+      }
+    }
     // Reply
     ctx.replyWithHTML(result)
   })
