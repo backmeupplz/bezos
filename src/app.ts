@@ -12,6 +12,7 @@ import { setupTracker } from './helpers/activityTracker'
 import { scheduleGiveaway } from './helpers/scheduler'
 import { setupGiveaway } from './commands/giveaway'
 import { setupPayout } from './helpers/payout'
+import { setupRefList } from './commands/refList'
 
 // Setup the bot
 const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: process.env.USERNAME })
@@ -29,6 +30,8 @@ setupAd(bot)
 setupInfo(bot)
 // Giveaway command
 setupGiveaway(bot)
+// Ref list command
+setupRefList(bot)
 // Setup approval callback
 setupApproveCallback(bot)
 
