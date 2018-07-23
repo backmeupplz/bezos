@@ -8,6 +8,8 @@ import { getRefsMap } from '../helpers/referral'
  */
 export function setupRefList(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('ref_list', async (ctx) => {
+    // Shouldn't work in public chats
+    if (ctx.chat.type !== 'private') return
     // Get ref map
     const refsMap = await getRefsMap()
     // Create empty list
