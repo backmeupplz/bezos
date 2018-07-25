@@ -24,7 +24,7 @@ export function setupWinners(bot: Telegraf<ContextMessageUpdate>) {
       if (ctx.chat.type === 'private') {
         result = `${result}\n<a href="tg://user?id=${winner.chatId}">${winner.name}</a> — ${winner.amount} ETH ~ $${(winner.amount * price).toFixed(2)}`
       } else {
-        result = `${result}\n${winner.name} — ${winner.amount} ETH ~ $${(winner.amount * price).toFixed(2)}`
+        result = `${result}\n${winner.name.replace('@', '')} — ${winner.amount} ETH ~ $${(winner.amount * price).toFixed(2)}`
       }
       if (winner.transaction) {
         result = `${result} (<a href="https://etherscan.io/tx/${winner.transaction}">доказательство</a>)`
