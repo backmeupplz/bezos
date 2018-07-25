@@ -21,7 +21,11 @@ export function setupWinners(bot: Telegraf<ContextMessageUpdate>) {
     // Add winners to the result
     result = `${result}\n\n<b>Победители:</b>`
     for (const winner of winners) {
-      result = `${result}\n<a href="tg://user?id=${winner.chatId}">${winner.name}</a> — ${winner.amount} ETH ~ $${(winner.amount * price).toFixed(2)}`
+      if (ctx.chat.type === 'private') {
+        result = `${result}\n<a href="tg://user?id=${winner.chatId}">${winner.name}</a> — ${winner.amount} ETH ~ $${(winner.amount * price).toFixed(2)}`
+      } else {
+        result = `${result}\n${winner.name} — ${winner.amount} ETH ~ $${(winner.amount * price).toFixed(2)}`
+      }
       if (winner.transaction) {
         result = `${result} (<a href="https://etherscan.io/tx/${winner.transaction}">доказательство</a>)`
       }      
