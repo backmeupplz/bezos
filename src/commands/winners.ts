@@ -21,9 +21,9 @@ export function setupWinners(bot: Telegraf<ContextMessageUpdate>) {
     // Add winners to the result
     result = `${result}\n\n<b>Победители:</b>`
     for (const winner of winners) {
-      result = `${result}\n<a href="tg://user?id=${winner.chatId}>${winner.name}</a> — ${winner.amount} ETH ($${(winner.amount * price).toFixed(2)})`
+      result = `${result}\n<a href="tg://user?id=${winner.chatId}">${winner.name}</a> — ${winner.amount} ETH ~ $${(winner.amount * price).toFixed(2)}`
       if (winner.transaction) {
-        result = `${result}, <a href="https://etherscan.io/tx/${winner.transaction}">доказательство</a>`
+        result = `${result} (<a href="https://etherscan.io/tx/${winner.transaction}">доказательство</a>)`
       }      
     }
     // Add current prize
@@ -33,6 +33,8 @@ export function setupWinners(bot: Telegraf<ContextMessageUpdate>) {
       result = `${result}\n\n<b>Разыгрывается сегодня:</b>\n${balance} ETH ~ $${(balance * price).toFixed(2)}`
     }
     // Reply
-    ctx.replyWithHTML(result)
+    ctx.replyWithHTML(result, {
+      disable_web_page_preview: true
+    })
   })
 }

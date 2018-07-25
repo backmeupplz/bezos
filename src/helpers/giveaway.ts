@@ -104,7 +104,7 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
     // Make all users inactive
     await resetActivity()
     // Add winner
-    await addWinner(balance, user.id, name)
+    await addWinner(balance, user.id, user.username ? user.username : `${user.first_name}${user.last_name ? ` ${user.last_name}` : ''}`)
   } catch(err) {
     const errorText = `Что-то пошло не так с транзакцией Ethereum на кошелек пользователя, @borodutch разберется:\n\n<code>${err.message}</code>`
     await (<any>bot.telegram).sendMessage(Number(process.env.CHAT_ID), errorText, {
