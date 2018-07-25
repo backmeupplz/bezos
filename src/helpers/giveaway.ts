@@ -6,6 +6,7 @@ import { getActiveAdvertisers } from '../models'
 import { ChatMember, Message } from 'telegram-typings'
 import { getRefsMap } from './referral'
 import { transfer, getNewAccount } from './Ethereum'
+import { addWinner } from '../models/winner'
 
 /**
  * Function that starts giveaway
@@ -76,6 +77,8 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
   await (<any>bot.telegram).sendMessage(Number(process.env.CHAT_ID), text, {
     parse_mode: 'HTML'
   })
+  // Save balance
+  const balance = advertiser.balance
   // Get ad
   const ad = `#Реклама\n\n${advertiser.advertiser.ad}\n\n——————————\n<a href="http://telegra.ph/Pravila-i-usloviya-uchastiya-v-Razdache-Bezosa-07-18">Правила группы и условия участия в Раздаче Безоса</a> (<a href="http://tgraph.io/Pravila-i-usloviya-uchastiya-v-Razdache-Bezosa-07-18">зеркало</a>) — обязательны к прочтению. За флуд, спам, флейм пермабан. Модераторам выдали банхаммеры. Хотите увидеть здесь свою рекламу? Пишите в личку боту @official_bezos_bot.`
   // Post ad to the ad channel
@@ -100,6 +103,8 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
     await transfer(advertiser.advertiser.ethAddress, advertiser.advertiser.ethKey, winner.ethWinAddress)
     // Make all users inactive
     await resetActivity()
+    // Add winner
+    await addWinner(balance, user.id, name)
   } catch(err) {
     const errorText = `Что-то пошло не так с транзакцией Ethereum на кошелек пользователя, @borodutch разберется:\n\n<code>${err.message}</code>`
     await (<any>bot.telegram).sendMessage(Number(process.env.CHAT_ID), errorText, {

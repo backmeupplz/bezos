@@ -1,7 +1,8 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
-import { getWinBalance, getMember } from '../models/member';
-import { transfer } from './Ethereum';
+import { getWinBalance, getMember } from '../models/member'
+import { transfer } from './Ethereum'
+import { getWinner } from '../models/winner'
 const ethereumRegex = require('ethereum-regex')
 
 /**
@@ -39,6 +40,10 @@ async function checkPayout(ctx: ContextMessageUpdate) {
     const tx = await transfer(member.ethWinAddress, member.ethWinKey, message.text)
     // Notify user
     ctx.replyWithHTML(`${balance} ETH было переведено на <a href="https://etherscan.io/address/${message.text}">${message.text}</a> транзакцией <a href="https://etherscan.io/tx/${tx}">${tx}</a>. Спасибо за участие!`)
+    // Save transaction to winner
+    const winner = await getWinner(member.chatId)
+    winner.transaction = tx
+    await winner.save()
   } catch (err) {
     ctx.replyWithHTML(`К сожалению, возникла ошибка перевода:\n\n<code>${err.message}</code>`)
   }

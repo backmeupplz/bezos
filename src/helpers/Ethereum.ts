@@ -47,7 +47,7 @@ export async function getMemberBalance(member: Member): Promise<number> {
  * @param toAddress Address of the receiver
  * @returns transaction hash
  */
-export async function transfer(fromAddress: string, fromKey: string, toAddress: string){
+export async function transfer(fromAddress: string, fromKey: string, toAddress: string) {
   // Get balance
   const balance = await web3.eth.getBalance(fromAddress)
   // Get nonce
@@ -78,7 +78,7 @@ export async function transfer(fromAddress: string, fromKey: string, toAddress: 
       if (err) rej(err)
       res(hash)
     })
-  })
+  }) as Promise<string>
 }
 
 /**

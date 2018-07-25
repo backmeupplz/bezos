@@ -13,6 +13,7 @@ import { scheduleGiveaway } from './helpers/scheduler'
 import { setupGiveaway } from './commands/giveaway'
 import { setupPayout } from './helpers/payout'
 import { setupRefList } from './commands/refList'
+import { setupWinners } from './commands/winners'
 
 // Setup the bot
 const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: process.env.USERNAME })
@@ -20,18 +21,18 @@ bot.startPolling()
 
 // Track activity
 setupTracker(bot)
+
 // Setup payout
 setupPayout(bot)
-// Start and help commands
+
+// Setup commands
 setupStartAndHelp(bot)
-// Ad command
 setupAd(bot)
-// Info command
 setupInfo(bot)
-// Giveaway command
 setupGiveaway(bot)
-// Ref list command
 setupRefList(bot)
+setupWinners(bot)
+
 // Setup approval callback
 setupApproveCallback(bot)
 
