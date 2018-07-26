@@ -1,6 +1,7 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { getRefsMap } from '../helpers/referral'
+import { getMember } from '../models/member';
 
 /**
  * Setting up /ref_list command
@@ -8,6 +9,8 @@ import { getRefsMap } from '../helpers/referral'
  */
 export function setupRefList(bot: Telegraf<ContextMessageUpdate>) {
   bot.command('ref_list', async (ctx) => {
+    // Get chat member
+    const member = await getMember(ctx.from.id)
     // Shouldn't work in public chats
     if (ctx.chat.type !== 'private') return
     // Get ref map
@@ -31,6 +34,10 @@ export function setupRefList(bot: Telegraf<ContextMessageUpdate>) {
         prevRefCount = member.refCount
         result = `${result}\n${member.refCount}. <a href="tg://user?id=${member.chatId}">${member.chatId}</a>`
       }
+    }
+    // Add current referral
+    if (member.ref) {
+      result = `${result}\n\nВаша реферальная сила направлена в сторону <a href="tg://user?id=${member.ref}">вот этого</a> пользователя.`
     }
     // Reply
     ctx.replyWithHTML(result)
