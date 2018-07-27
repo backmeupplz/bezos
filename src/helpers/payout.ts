@@ -11,7 +11,11 @@ const ethereumRegex = require('ethereum-regex')
  */
 export function setupPayout(bot: Telegraf<ContextMessageUpdate>) {
   bot.use((ctx, next) => {
-    checkPayout(ctx)
+    try {
+      checkPayout(ctx)
+    } catch (err) {
+      // Do nothing
+    }
     return next()
   })
 }
