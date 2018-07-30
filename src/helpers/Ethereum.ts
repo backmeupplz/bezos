@@ -44,12 +44,13 @@ export async function getMemberBalance(member: Member): Promise<number> {
   while (!ether && retry < 3) {
     try {
       const balance = await web3.eth.getBalance(member.ethWinAddress)
-      let ether = web3.utils.fromWei(balance, 'ether')
+      ether = web3.utils.fromWei(balance, 'ether')
       console.log(`Got balance for member ${member.chatId}: ${ether}`)
       if (ether < 0.005) ether = 0
     } catch (err) {
       console.log('Error getting member balance:', err)
-      retry++
+    } finally {
+      retry += 1
     }
   }
   return ether || 0
