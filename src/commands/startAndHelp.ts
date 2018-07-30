@@ -32,7 +32,9 @@ export function setupStartAndHelp(bot: Telegraf<ContextMessageUpdate>) {
     } else {
       if (ctx.chat.id === chatId) {
         const balance = await getWinBalance(ctx.message.from.id)
-        ctx.replyWithHTML(`• Хотите купить рекламу в чате <a href="${chatLink}">Раздача Безоса</a>? Милости прошу ко <a href="https://t.me/official_bezos_bot">мне в личку</a>\n• Ваша реферальная ссылка — t.me/official_bezos_bot?start=${ctx.message.from.id}\n• Количество активных пользователей, которые сегодня дают вам бонус: ${getRefsMap()[ctx.message.from.id] || 0}\n• Текущее количество активных участников: ${activeMembersCount}\n• Ваш текущий баланс выигрыша: ${balance} ETH${balance ? ', ответьте на любое мое сообщение адресом Ethereum кошелька и я сразу же выведу на него ваш приз' : ''}\n• /winners — список предыдущих победителей с доказательствами\n• <a href="http://telegra.ph/Pravila-i-usloviya-uchastiya-v-Razdache-Bezosa-07-18">Правила чата тут</a> (<a href="http://tgraph.io/Pravila-i-usloviya-uchastiya-v-Razdache-Bezosa-07-18">зеркало</a>)`)
+        ctx.replyWithHTML(`• Хотите купить рекламу в чате <a href="${chatLink}">Раздача Безоса</a>? Милости прошу ко <a href="https://t.me/official_bezos_bot">мне в личку</a>\n• Ваша реферальная ссылка — t.me/official_bezos_bot?start=${ctx.message.from.id}\n• Количество активных пользователей, которые сегодня дают вам бонус: ${getRefsMap()[ctx.message.from.id] || 0}\n• Текущее количество активных участников: ${activeMembersCount}\n• Ваш текущий баланс выигрыша: ${balance} ETH${balance ? ', ответьте на любое мое сообщение адресом Ethereum кошелька и я сразу же выведу на него ваш приз' : ''}\n• /winners — список предыдущих победителей с доказательствами\n• <a href="http://telegra.ph/Pravila-i-usloviya-uchastiya-v-Razdache-Bezosa-07-18">Правила чата тут</a> (<a href="http://tgraph.io/Pravila-i-usloviya-uchastiya-v-Razdache-Bezosa-07-18">зеркало</a>)`, {
+          reply_to_message_id: ctx.message.message_id
+        })
       } else {
         ctx.replyWithHTML(`Сорямба, но я работаю только в чате <a href="${chatLink}">Раздача Безоса</a>. Только там я бесплатно раздаю Ethereum активным участникам. Пис!`)
       }
