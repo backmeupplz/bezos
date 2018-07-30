@@ -45,6 +45,7 @@ export async function getMemberBalance(member: Member): Promise<number> {
     try {
       const balance = await web3.eth.getBalance(member.ethWinAddress)
       let ether = web3.utils.fromWei(balance, 'ether')
+      console.log(`Got balance for member ${member.chatId}: ${ether}`)
       if (ether < 0.005) ether = 0
     } catch (err) {
       console.log('Error getting member balance:', err)
