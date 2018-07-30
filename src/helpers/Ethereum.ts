@@ -40,12 +40,16 @@ export async function getBalance(advertiser: Advertiser): Promise<number> {
  */
 export async function getMemberBalance(member: Member): Promise<number> {
   let ether: number
-  try {
-    const balance = await web3.eth.getBalance(member.ethWinAddress)
-    let ether = web3.utils.fromWei(balance, 'ether')
-    if (ether < 0.005) ether = 0
-  } catch (err) {
-    // Do nothing
+  let retry = 0
+  while (!ether && retry < 3) {
+    try {
+      const balance = await web3.eth.getBalance(member.ethWinAddress)
+      let ether = web3.utils.fromWei(balance, 'ether')
+      if (ether < 0.005) ether = 0
+    } catch (err) {
+      console.log('Error getting member balance:', err)
+      retry++
+    }
   }
   return ether || 0
 }
