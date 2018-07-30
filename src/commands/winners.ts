@@ -2,7 +2,7 @@
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { getWinners } from '../models/winner'
 import axios from 'axios'
-import { getActiveAdvertisers } from '../models';
+import { getActiveAdvertisers } from '../models'
 
 /**
  * Setting up /winners command
@@ -13,8 +13,13 @@ export function setupWinners(bot: Telegraf<ContextMessageUpdate>) {
     const winners = await getWinners()
     // Get overall prize
     const overallPrize = winners.reduce((prev, curr) => prev + curr.amount, 0)
-    const priceResponse = await axios.get('https://api.etherscan.io/api?module=stats&action=ethprice')
-    const price: number = Number(priceResponse.data.result.ethusd)
+    let price = 0
+    try {
+      const priceResponse = await axios.get('https://api.etherscan.io/api?module=stats&action=ethprice')
+      price = Number(priceResponse.data.result.ethusd)
+    } catch(err) {
+      // Do nothing
+    }
     const usdWon = (overallPrize * price).toFixed(2)
     // Add overall prize to the result
     let result = `<b>Общий призовой фонд:</b>\n${overallPrize} ETH ~ $${usdWon}`

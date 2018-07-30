@@ -23,9 +23,14 @@ export function getNewAccount() {
  * @returns Balance of the advertiser in ETH
  */
 export async function getBalance(advertiser: Advertiser): Promise<number> {
-  const balance = await web3.eth.getBalance(advertiser.ethAddress)
-  const ether = web3.utils.fromWei(balance || 0, 'ether')
-  return ether
+  let ether: number
+  try {
+    const balance = await web3.eth.getBalance(advertiser.ethAddress)
+    ether = web3.utils.fromWei(balance || 0, 'ether')
+  } catch (err) {
+    // Do nothing
+  }
+  return ether || 0
 }
 
 /**
@@ -34,10 +39,15 @@ export async function getBalance(advertiser: Advertiser): Promise<number> {
  * @returns Balance of the member in ETH
  */
 export async function getMemberBalance(member: Member): Promise<number> {
-  const balance = await web3.eth.getBalance(member.ethWinAddress)
-  let ether = web3.utils.fromWei(balance, 'ether')
-  if (ether < 0.005) ether = 0
-  return ether
+  let ether: number
+  try {
+    const balance = await web3.eth.getBalance(member.ethWinAddress)
+    let ether = web3.utils.fromWei(balance, 'ether')
+    if (ether < 0.005) ether = 0
+  } catch (err) {
+    // Do nothing
+  }
+  return ether || 0
 }
 
 /**

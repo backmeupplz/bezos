@@ -7,6 +7,7 @@ import { ChatMember, Message } from 'telegram-typings'
 import { getRefsMap } from './referral'
 import { transfer, getNewAccount } from './Ethereum'
 import { addWinner } from '../models/winner'
+import { Account } from '../../node_modules/@types/web3/eth/accounts'
 
 /**
  * Function that starts giveaway
@@ -93,7 +94,14 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
   await bot.telegram.pinChatMessage(adForward.chat.id, adForward.message_id)
   // Check if winner has ethereum wallet
   if (!winner.ethWinAddress || !winner.ethWinKey) {
-    const account = getNewAccount()
+    let account: Account
+    while (!account) {
+      try {
+        account = getNewAccount()
+      } catch (err) {
+        await delay(1)
+      }
+    }
     winner.ethWinAddress = account.address
     winner.ethWinKey = account.privateKey
     winner = await (<any>winner).save()
@@ -111,4 +119,12 @@ export async function giveaway(bot: Telegraf<ContextMessageUpdate>) {
       parse_mode: 'HTML'
     })
   }
+}
+
+/**
+ * Sleep function for the typescript
+ * @param s Number of seconds to sleep
+ */
+function delay(s: number) {
+  return new Promise(resolve => setTimeout(resolve, s * 1000))
 }

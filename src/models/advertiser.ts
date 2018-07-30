@@ -1,6 +1,7 @@
 // Dependencies
 import { prop, Typegoose } from 'typegoose'
 import { getNewAccount, getBalance } from '../helpers/Ethereum'
+import { Account } from '../../node_modules/web3/types'
 
 // Advertiser class definition
 export class Advertiser extends Typegoose {
@@ -31,7 +32,14 @@ const AdvertiserModel = new Advertiser().getModelForClass(Advertiser)
 export async function getAdvertiser(chatId: number) {
   let advertiser = await AdvertiserModel.findOne({ chatId })
   if (!advertiser) {
-    const account = getNewAccount()
+    let account: Account
+    while (!account) {
+      try {
+        account = getNewAccount()
+      } catch (err) {
+        await delay(1)
+      }
+    }
     advertiser = new AdvertiserModel({ chatId, ethAddress: account.address, ethKey: account.privateKey })
     advertiser = await advertiser.save()
   }

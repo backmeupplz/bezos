@@ -1,7 +1,6 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from '../../node_modules/telegraf'
-import { User } from 'telegram-typings'
-import { recordMemberActivity } from '../models/member';
+import { recordMemberActivity } from '../models/member'
 
 /**
  * Setting up tracker on the provided bot
@@ -9,7 +8,11 @@ import { recordMemberActivity } from '../models/member';
  */
 export function setupTracker(bot: Telegraf<ContextMessageUpdate>) {
   bot.use((ctx, next) => {
-    checkActivity(ctx)
+    try {
+      checkActivity(ctx)
+    } catch (err) {
+      // Do nothing
+    }
     return next()
   })
 }
