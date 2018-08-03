@@ -14,8 +14,9 @@ export function setupPayout(bot: Telegraf<ContextMessageUpdate>) {
       checkPayout(ctx)
     } catch (err) {
       // Do nothing
+    } finally {
+      next()
     }
-    return next()
   })
 }
 
