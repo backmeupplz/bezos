@@ -48,8 +48,11 @@ export async function startRaffle(bot: Telegraf<ContextMessageUpdate>) {
  */
 export function setupCallback(bot: Telegraf<ContextMessageUpdate>) {
   (<any>bot).action(async (data: string, ctx: ContextMessageUpdate) => {
-    // Get raffle
+    // Get data
     const datas = data.split('~')
+    // Check if not approval
+    if (['a', 'd'].indexOf(datas[0]) > -1) return
+    // Get raffle
     const chatId = Number(datas[0])
     const messageId = Number(datas[1])
     let raffle = await getRaffle(chatId, messageId)
