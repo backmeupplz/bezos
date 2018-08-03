@@ -6,13 +6,14 @@ mongoose.connect(process.env.MONGO, { useNewUrlParser: true })
 
 // Get models
 import { Advertiser, getActiveAdvertisers, getAdvertiser } from './advertiser'
-import { Member } from './member'
-import { Winner } from './winner'
+import { addRaffle, getRaffle, Raffle } from './raffle'
+
 // Export models
 export {
   Advertiser,
   getActiveAdvertisers,
   getAdvertiser,
-  Member,
-  Winner,
+  addRaffle,
+  getRaffle,
+  Raffle,
 }

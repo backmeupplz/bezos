@@ -1,8 +1,7 @@
 // Dependencies
 import { Telegraf, ContextMessageUpdate } from 'telegraf'
-import { getWinBalance, getMember } from '../models/member'
-import { transfer } from './Ethereum'
-import { getWinner } from '../models/winner'
+import { transfer, getRaffleBalance } from './Ethereum'
+import { getRaffleByWinnerId } from '../models/raffle'
 const ethereumRegex = require('ethereum-regex')
 
 /**
@@ -35,19 +34,26 @@ async function checkPayout(ctx: ContextMessageUpdate) {
   if (message.reply_to_message.from.username !== process.env.USERNAME) return
   // If not an ETH address, then stop
   if (!ethereumRegex({ exact: true }).test(message.text)) return
+  // Get raffle
+  let raffle = await getRaffleByWinnerId(message.from.id)
+  // Return if no raffle or there is a transaction
+  if (!raffle || raffle.transaction) return
   // If not enough balance, then stop
-  const balance = await getWinBalance(message.from.id)
+  const balance = await getRaffleBalance(raffle)
   if (balance <= 0.005) return
   // Transfer balance
   try {
-    const member = await getMember(message.from.id)
-    const tx = await transfer(member.ethWinAddress, member.ethWinKey, message.text)
+    const tx = await transfer(raffle.ethAddress, raffle.ethKey, message.text)
     // Notify user
     ctx.replyWithHTML(`${balance} ETH было переведено на <a href="https://etherscan.io/address/${message.text}">${message.text}</a> транзакцией <a href="https://etherscan.io/tx/${tx}">${tx}</a>. Спасибо за участие!`)
-    // Save transaction to winner
-    const winner = await getWinner(member.chatId)
-    winner.transaction = tx
-    await winner.save()
+    // Save transaction to raffle
+    raffle.transaction = tx
+    raffle = await raffle.save()
+    // Update message
+    const text = `${raffle.text} Выигрыш переведен транзакцией: <a href="https://etherscan.io/tx/${tx}">${tx}</a>.`
+    await ctx.telegram.editMessageText(raffle.chatId, raffle.messageId, undefined, text, {
+      parse_mode: 'HTML',
+    })
   } catch (err) {
     ctx.replyWithHTML(`К сожалению, возникла ошибка перевода:\n\n<code>${err.message}</code>`)
   }

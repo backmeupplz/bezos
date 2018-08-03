@@ -3,7 +3,7 @@ import * as w3 from 'web3' // a hack due to the poor web3 typings
 const w3any: any = w3
 import Web3 from 'web3'
 const Tx = require('ethereumjs-tx')
-import { Advertiser, Member } from '../models'
+import { Advertiser, Raffle } from '../models'
 import axios from 'axios'
 
 // Create web3 instance
@@ -34,24 +34,17 @@ export async function getBalance(advertiser: Advertiser): Promise<number> {
 }
 
 /**
- * Checks balance of a member
- * @param member Member to check balance
- * @returns Balance of the member in ETH
+ * Checks balance of an raffle
+ * @param raffle Raffle to check balance
+ * @returns Balance of the raffle in ETH
  */
-export async function getMemberBalance(member: Member): Promise<number> {
+export async function getRaffleBalance(raffle: Raffle): Promise<number> {
   let ether: number
-  let retry = 0
-  while (!ether && retry < 3) {
-    try {
-      const balance = await web3.eth.getBalance(member.ethWinAddress)
-      ether = web3.utils.fromWei(balance, 'ether')
-      console.log(`Got balance for member ${member.chatId}: ${ether}`)
-      if (ether < 0.005) ether = 0
-    } catch (err) {
-      console.log('Error getting member balance:', err)
-    } finally {
-      retry += 1
-    }
+  try {
+    const balance = await web3.eth.getBalance(raffle.ethAddress)
+    ether = web3.utils.fromWei(balance || 0, 'ether')
+  } catch (err) {
+    // Do nothing
   }
   return ether || 0
 }

@@ -8,19 +8,13 @@ import { setupStartAndHelp } from './commands/startAndHelp'
 import { setupAd } from './commands/ad'
 import { setupInfo } from './commands/info'
 import { setupApproveCallback } from './helpers/approval'
-import { setupTracker } from './helpers/activityTracker'
 import { scheduleGiveaway } from './helpers/scheduler'
-import { setupGiveaway } from './commands/giveaway'
 import { setupPayout } from './helpers/payout'
-import { setupRefList } from './commands/refList'
-import { setupWinners } from './commands/winners'
+import { setupCallback } from './helpers/giveaway'
 
 // Setup the bot
 const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: process.env.USERNAME })
 bot.startPolling()
-
-// Track activity
-setupTracker(bot)
 
 // Setup payout
 setupPayout(bot)
@@ -29,9 +23,9 @@ setupPayout(bot)
 setupStartAndHelp(bot)
 setupAd(bot)
 setupInfo(bot)
-setupGiveaway(bot)
-setupRefList(bot)
-setupWinners(bot)
+
+// Setup raffle callback
+setupCallback(bot)
 
 // Setup approval callback
 setupApproveCallback(bot)
