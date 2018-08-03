@@ -3,10 +3,6 @@ import { Telegraf, ContextMessageUpdate } from 'telegraf'
 import { getRaffleByWinnerId } from '../models/raffle';
 import { getRaffleBalance } from '../helpers/Ethereum';
 
-// Setup constants
-const chatLink = process.env.CHAT_LINK
-const chatId = Number(process.env.CHAT_ID)
-
 // Start and help commands
 export function setupStartAndHelp(bot: Telegraf<ContextMessageUpdate>) {
   bot.command(['start', 'help'], async (ctx) => {
