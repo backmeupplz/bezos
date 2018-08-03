@@ -42,8 +42,15 @@ export async function sendForApproval(advertiserId: number, bot: Telegraf<Contex
 export function setupApproveCallback(bot: Telegraf<ContextMessageUpdate>) {
   const anybot: any = bot
   anybot.action(/.+/, async (ctx: ContextMessageUpdate) => {
+    // Check if admin
+    if (ctx.from.id !== Number(process.env.ADMIN_CHAT_ID)) return
     // Get data
     const data = ctx.callbackQuery.data.split('~')
+    // Check if approved or disapproved
+    if (['a', 'd'].indexOf(data[0]) < 0) {
+      return
+    }
+    // Get approves
     const approved = data[0] === 'a'
     const chatId = Number(data[1])
     // Get advertiser

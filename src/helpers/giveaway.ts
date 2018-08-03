@@ -55,19 +55,27 @@ export function setupCallback(bot: Telegraf<ContextMessageUpdate>) {
     let raffle = await getRaffle(chatId, messageId)
     // Check if raffle is there
     if (!raffle) {
-      await (<any>ctx).answerCbQuery('Пожалуйста, попробуйте через пару минут', undefined, true)
+      try {
+        await ctx.answerCallbackQuery('Пожалуйста, попробуйте через пару минут', undefined, true)
+      } catch (err) {
+        console.log(err)
+      }
       return
     }
     // Check if already in
     if (raffle.participantsIds.indexOf(ctx.from.id) > -1) {
-      await (<any>ctx).answerCbQuery('Вы уже принимаете участие, отлично!', undefined, true)
+      try {
+        await ctx.answerCallbackQuery('Вы уже принимаете участие, отлично!', undefined, true)
+      } catch (err) {
+        console.log(err)
+      }
       return
     }
     // Add participant and update number
     raffle.participantsIds.push(ctx.from.id)
     raffle = await raffle.save()
     // Reply that they are in
-    await await (<any>ctx).answerCbQuery('Отлично, вы отметились, как участник!', undefined, true)
+    await await ctx.answerCallbackQuery('Отлично, вы отметились, как участник!', undefined, true)
     // Update counter of participants
     try {
       // Add buttons
@@ -76,7 +84,11 @@ export function setupCallback(bot: Telegraf<ContextMessageUpdate>) {
         reply_markup: getButtons(raffle),
       }
       const text = `${raffle.text}\n\nКоличество участников: ${raffle.participantsIds.length}.`
-      await ctx.telegram.editMessageText(raffle.chatId, raffle.messageId, undefined, text, options)
+      try {
+        await ctx.telegram.editMessageText(raffle.chatId, raffle.messageId, undefined, text, options)
+      } catch (err) {
+        console.log(err)
+      }
     } catch (err) {
       // Do nothing
     }
