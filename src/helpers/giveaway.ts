@@ -22,7 +22,7 @@ export async function startRaffle(bot: Telegraf<ContextMessageUpdate>) {
   // Get ad text
   const text = `${advertiser.advertiser.ad}\n\n***\nСегодняшний рекламодатель разыгрывает ${advertiser.balance} ETH между участниками раздачи. Чтобы участвовать в раздаче, нажмите на кнопку ниже. Хотите купить рекламу на этом канале? Вам к @official_bezos_bot.`;
   // Send message
-  const sent: Message = (<any>bot).telegram.sendMessage(Number(process.env.CHANNEL_ID), text, {
+  const sent: Message = await (<any>bot).telegram.sendMessage(Number(process.env.CHANNEL_ID), text, {
     parse_mode: 'HTML',
   })
   // Add raffle
