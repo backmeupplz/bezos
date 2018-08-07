@@ -11,6 +11,7 @@ import { setupApproveCallback } from './helpers/approval'
 import { scheduleGiveaway } from './helpers/scheduler'
 import { setupPayout } from './helpers/payout'
 import { setupCallback } from './helpers/giveaway'
+import { setupGo } from './commands/go'
 
 // Setup the bot
 const bot: Telegraf<ContextMessageUpdate> = new telegraf(process.env.TOKEN, { username: process.env.USERNAME })
@@ -23,6 +24,7 @@ setupPayout(bot)
 setupStartAndHelp(bot)
 setupAd(bot)
 setupInfo(bot)
+setupGo(bot)
 
 // Setup raffle callback
 setupCallback(bot)
