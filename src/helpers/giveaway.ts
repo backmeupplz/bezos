@@ -28,11 +28,15 @@ export async function startRaffle(bot: Telegraf<ContextMessageUpdate>) {
   // Add raffle
   const raffle = await addRaffle(sent.chat.id, sent.message_id, text)
   // Move money
-  await transfer(
-    advertiser.advertiser.ethAddress,
-    advertiser.advertiser.ethKey,
-    raffle.ethAddress,
-  )
+  try {
+    await transfer(
+      advertiser.advertiser.ethAddress,
+      advertiser.advertiser.ethKey,
+      raffle.ethAddress,
+    )
+  } catch (err) {
+    bot.telegram.sendMessage(Number(process.env.ADMIN_CHAT_ID), `Что-то пошло не так с переводом денег с ${advertiser.advertiser.ethAddress} на ${raffle.ethAddress}:\n\`\`\` ${JSON.stringify(err, undefined, 2)}\`\`\``)
+  }
   // Add buttons
   const options: ExtraEditMessage = {
     parse_mode: 'HTML',
