@@ -74,6 +74,15 @@ export function setupCallback(bot: Telegraf<ContextMessageUpdate>) {
       }
       return
     }
+    // Check if not over
+    if (raffle.winner) {
+      try {
+        await ctx.answerCallbackQuery('Простите, но этот розыгрыш уже окончен', undefined, true)
+      } catch (err) {
+        console.log(err)
+      }
+      return
+    }
     // Add participant and update number
     raffle.participantsIds.push(ctx.from.id)
     raffle = await raffle.save()
