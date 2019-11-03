@@ -34,7 +34,7 @@
     "@types/node-schedule": "^1.2.2",
     "@types/reflect-metadata": "^0.1.0",
     "@types/web3": "^1.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "concurrently": "^3.6.0",
     "dotenv": "^6.0.0",
     "ethereum-regex": "^1.1.3",
